@@ -1,0 +1,5 @@
+<root>
+	<service id="1" name="Service1" fee="1" />
+	<service id="2" name="Service2" fee="0" />
+	<service id="3" name="Service3" fee="2" />
+</root>

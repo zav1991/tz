@@ -1,0 +1,11 @@
+<root>
+	<service id="1">
+		<amount left_comment="Sum" up_comment="Enter sum:" type="text" />
+		<phone up_comment="Enter phone" type="text" />
+	</service>
+	<service id="3">
+		<pincode left_comment="PIN" up_comment="Enter PIN:" type="text" />
+		<param1 type="hidden" value="1" />
+		<phone up_comment="Enter phone" type="text" />
+	</service>
+</root>

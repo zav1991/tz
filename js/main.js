@@ -2,12 +2,12 @@ function main() {
     var mas = loadServises(),
     inputFocus;
     inputCount = 0;
-    servise = [];
+    var m, selectedServise = [];
+    $('.workspace').html('');
+    var servise = [];
     paintMenu(mas);
     $('.button').on('click', function(){
-        var m =this.id;
-        if (m === '1' || m === '2' || m === '3')//загрузка данных из service.xml
-        {
+        m =this.id;
             $.ajax({
                 url: 'config/service.xml',
                 type: 'get',
@@ -24,10 +24,23 @@ function main() {
                     servise[i][4] = child.attr('value');
                 }
             })
+        for (var i = 0; i < mas.length; i ++)
+        {
+            if (mas[i][0] === m) {
+                selectedServise[0] = mas[i][0];
+                selectedServise[1] = mas[i][1];
+                selectedServise[2] = mas[i][2];
+            }
         }
 
 
+
         paintFields(servise);
+        $('#mainMenu').show();
+        $('#mainMenu').on('click', function(){
+            $('#mainMenu').off();
+            main();
+        });
         if (inputCount>0){//установка фокуса на первом элементе
             $('#input1').focus();
             inputFocus = $('#input1');
@@ -51,7 +64,61 @@ function main() {
         inputFocus.focus();
     });
     $('#next').on('click', function(){
-        alert('1');
+    var f = 0;
+        for (var i = 1; i <= inputCount; i++)
+        {
+            if($('#input'+i).val() === "")
+            {
+                if(f === 0)
+                {
+                    inputFocus = ('#input'+i);
+                    $(inputFocus).focus();
+                }
+                f++;
+            }
+
+        }
+        if (f>0){//ветка незаполненных полей
+            var t1="Необходимо заполнить следующие поля:";
+            for (var i=0; i < servise.length;i++)
+            {
+                if(servise[i][3]==='text')
+                    t1=t1+'<br>'+servise[i][0]+',';
+
+            }
+            $('#dialog').html(t1.slice(0,-1));
+            //закрытие проверки на заполненность
+
+            //вызов диалогового окна
+            $( "#dialog" ).dialog({
+                modal: true,
+                buttons: {
+                    Ok: function() {
+                        $( this ).dialog( "close" );
+
+                    }
+                },
+                title: 'Внимание'
+            });//конец диалога
+        }
+        else{//когда все заполнено верно
+            for(var i = 1; i <= inputCount; i++)
+            {//заполнение значений value в service
+                for(var j =0 ;j < servise.length; j++)
+                    if(servise[j][0] === $('#input'+i).attr('name'))
+                        servise[j][4]=$('#input'+i).val();
+            }
+
+            $('.workspace').html('');//очищаем рабочую область
+            for(var i = 0;i < servise.length; i++)
+            {
+                $('.workspace').append('<div>' + servise[i][0] + ':\t' + servise[i][4] + '</div>');
+            }
+            $('.workspace').append('<div><button class="button" id="Pay">Pay</button></div>');
+        }
+        $('#Pay').on('click',function () {
+            pay(servise, selectedServise);
+        });
     })
     });//конец buttonClick
 
@@ -85,30 +152,6 @@ function paintMenu(arr) {
     }
     buttons = '<div style=" justify-content: center">' + buttons + '</div>';
     $('.workspace').append(buttons);
-}
-/*обработчики нажатий кнопок*/
-function buttonClick(){
-    var m =this.id;
-    if (m === '1' || m === '2' || m === '3')//загрузка данных из service.xml
-    {
-        $.ajax({
-            url: 'config/service.xml',
-            type: 'get',
-            async: false
-        }).done(function (responce) {
-            var $fields = $(responce).find('service[id="' + m + '"]');
-            for (var i = 0; i < $fields.children().length; i++) {
-                var child = $($fields.children()[i]);
-                servise[i] = [];
-                servise[i][0] = child.get(0).tagName;
-                servise[i][1] = child.attr('left_comment');
-                servise[i][2] = child.attr('up_comment');
-                servise[i][3] = child.attr('type');
-                servise[i][4] = child.attr('value');
-            }
-        })
-    }
-        paintFields(servise);
 }
 /*отрисовка полей ввода*/
 function paintFields(arr) {
@@ -149,31 +192,34 @@ function paintFields(arr) {
     );
     //$('.inputStr').on('focus', onFocus);
 }
-/*отбработчик клавиатуры ввода*/
-function pressKeyboard(){
-    $('.btn').on('click', function () {
-        var Paste = $(this).data('paste');
-        if (Paste === 'c')
-        {
-            inputFocus.val('');
-        }
-        else if (Paste === '<')
-        {
-            inputFocus.val(inputFocus.val().slice(0,-1));
-        }
-        else {
-            debugger
-            inputFocus.val(inputFocus.val() + Paste);
-        }
-        $('.btn').off(console.log(1));
-        inputFocus.focus();
-    });
+/*оплата*/
+function pay(mas, selSer){
+    var k = -1;
+    for (var i = 0; i < mas.length; i++)
+    {
+        if (mas[i][0] === 'amount')
+            k=i;
+    }
+    if (k>-1)
+    {
+        var total = parseInt(selSer[2])+parseInt(mas[k][4]);
+    }
+    else
+    {
+        var total = parseInt(selSer[2]);
+    }
+    var postObject = '';//создал объект для отправки
+    for (var i = 0; i < mas.length; i++)
+    {
+        postObject = postObject + mas[i][0] + ': '+ mas[i][4] +', ';
 
-
-}
-
-function onFocus(){
-    inputFocus = $(this);
-    pressKeyboard();
+    }
+    postObject = postObject +'total: '+ total;
+    $.ajax({
+        url: '127.0.0.1/send',
+        type: 'POST',
+        data: postObject
+    }).fail(function() {alert('Ошибка отправки'); main();})
+        .done(function() { alert("Успешное выполнение"); main(); });
 }
 $(document).ready(main);

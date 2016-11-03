@@ -64,11 +64,12 @@ function main() {
         inputFocus.focus();
     });
     $('#next').on('click', function(){
-    var f = 0;
+    var f = 0, inp =[];
         for (var i = 1; i <= inputCount; i++)
         {
             if($('#input'+i).val() === "")
             {
+                inp.push(i);
                 if(f === 0)
                 {
                     inputFocus = ('#input'+i);
@@ -82,7 +83,8 @@ function main() {
             var t1="Необходимо заполнить следующие поля:";
             for (var i=0; i < servise.length;i++)
             {
-                if(servise[i][3]==='text')
+                for (var j=0; j < inp.length; j++)
+                if(servise[i][3]==='text'&& servise[i][0]===$('#input'+inp[j]).attr('name'))
                     t1=t1+'<br>'+servise[i][0]+',';
 
             }

@@ -1,12 +1,59 @@
 function main() {
     var mas = loadServises(),
-    $inputFocus;
+    inputFocus;
+    inputCount = 0;
     servise = [];
     paintMenu(mas);
-    $('.button').on('click', buttonClick);
-    $('.inputStr').on('focus', onFocus);
-    $('.btn').on('click', pressKeyboard);
+    $('.button').on('click', function(){
+        var m =this.id;
+        if (m === '1' || m === '2' || m === '3')//загрузка данных из service.xml
+        {
+            $.ajax({
+                url: 'config/service.xml',
+                type: 'get',
+                async: false
+            }).done(function (responce) {
+                var $fields = $(responce).find('service[id="' + m + '"]');
+                for (var i = 0; i < $fields.children().length; i++) {
+                    var child = $($fields.children()[i]);
+                    servise[i] = [];
+                    servise[i][0] = child.get(0).tagName;
+                    servise[i][1] = child.attr('left_comment');
+                    servise[i][2] = child.attr('up_comment');
+                    servise[i][3] = child.attr('type');
+                    servise[i][4] = child.attr('value');
+                }
+            })
+        }
 
+
+        paintFields(servise);
+        if (inputCount>0){//установка фокуса на первом элементе
+            $('#input1').focus();
+            inputFocus = $('#input1');
+        }
+    $('.inputStr').on('focus', function(){
+        inputFocus = $(this);
+    });
+    $('.btn').on('click', function () {
+        var Paste = $(this).data('paste');
+        if (Paste === 'c')
+        {
+            inputFocus.val('');
+        }
+        else if (Paste === '<')
+        {
+            inputFocus.val(inputFocus.val().slice(0,-1));
+        }
+        else {
+            inputFocus.val(inputFocus.val() + Paste);
+        }
+        inputFocus.focus();
+    });
+    $('#next').on('click', function(){
+        alert('1');
+    })
+    });//конец buttonClick
 
 }
 /*загрузка данных из menu.xml*/
@@ -41,7 +88,7 @@ function paintMenu(arr) {
 }
 /*обработчики нажатий кнопок*/
 function buttonClick(){
-    var m =this.id
+    var m =this.id;
     if (m === '1' || m === '2' || m === '3')//загрузка данных из service.xml
     {
         $.ajax({
@@ -49,9 +96,8 @@ function buttonClick(){
             type: 'get',
             async: false
         }).done(function (responce) {
-            var $fields = $(responce).find('service[id="'+m+'"]');
-            for (var i = 0; i < $fields.children().length; i++)
-            {
+            var $fields = $(responce).find('service[id="' + m + '"]');
+            for (var i = 0; i < $fields.children().length; i++) {
                 var child = $($fields.children()[i]);
                 servise[i] = [];
                 servise[i][0] = child.get(0).tagName;
@@ -61,9 +107,8 @@ function buttonClick(){
                 servise[i][4] = child.attr('value');
             }
         })
-        paintFields(servise);
-
     }
+        paintFields(servise);
 }
 /*отрисовка полей ввода*/
 function paintFields(arr) {
@@ -71,7 +116,7 @@ function paintFields(arr) {
     for (var i =0; i < arr.length; i++)
     {
         if (arr[i][2] !== undefined) {
-            $('.workspace').append('<div class="input">' + arr[i][2] + '</div>');
+            $('.workspace').append('<div>' + arr[i][2] + '</div>');
         }
         if (arr[i][3] === 'hidden')
         {
@@ -79,10 +124,12 @@ function paintFields(arr) {
         }
         else{
             if (arr[i][1] !== undefined){
-                $('.workspace').append('<div class="ii" data-id ="'+arr[i][1]+'">'+arr[i][1]+'<input class="inputStr" style="margin: auto" name='+arr[i][0]+'></input></div>');
+                inputCount++;
+                $('.workspace').append('<div data-id ="'+arr[i][1]+'">'+arr[i][1]+'<input class="inputStr" style="margin: auto" name='+arr[i][0]+' id ="input'+inputCount+'"></input></div>');
             }
             else{
-                $('.workspace').append('<div class="ii"><input class="inputStr" style="margin: auto" name='+arr[i][0]+'></input></div>');
+                inputCount++;
+                $('.workspace').append('<div><input class="inputStr" style="margin: auto" name='+arr[i][0]+' id="input'+inputCount+'"></input></div>');
             }
         }
     }
@@ -100,26 +147,33 @@ function paintFields(arr) {
                     '<button class="btn" data-paste="<"><</button></div>'+
                     '<div><button class="button" id="next">Next</button></div>'
     );
+    //$('.inputStr').on('focus', onFocus);
 }
 /*отбработчик клавиатуры ввода*/
 function pressKeyboard(){
-    debugger
-    var Paste = $(this).data('paste');
-    if (Paste === 'c')
-    {
-        $inputFocus.val('');
-    }
-    else if (Paste === '<')
-    {
-        $inputFocus.val($inputFocus.val().slice(0,-1));
-    }
-    else {
-        $inputFocus.val($inputFocus.val() + Paste);
-    }
-    $inputFocus.focus();
+    $('.btn').on('click', function () {
+        var Paste = $(this).data('paste');
+        if (Paste === 'c')
+        {
+            inputFocus.val('');
+        }
+        else if (Paste === '<')
+        {
+            inputFocus.val(inputFocus.val().slice(0,-1));
+        }
+        else {
+            debugger
+            inputFocus.val(inputFocus.val() + Paste);
+        }
+        $('.btn').off(console.log(1));
+        inputFocus.focus();
+    });
+
+
 }
 
 function onFocus(){
-    alert(1);
+    inputFocus = $(this);
+    pressKeyboard();
 }
 $(document).ready(main);

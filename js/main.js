@@ -161,7 +161,7 @@ function paintFields(arr) {
     for (var i =0; i < arr.length; i++)
     {
         if (arr[i][2] !== undefined) {
-            $('.workspace').append('<div>' + arr[i][2] + '</div>');
+            $('.workspace').append('<div align="center" style="margin-right:auto">' + arr[i][2] + '</div>');
         }
         if (arr[i][3] === 'hidden')
         {
@@ -170,11 +170,11 @@ function paintFields(arr) {
         else{
             if (arr[i][1] !== undefined){
                 inputCount++;
-                $('.workspace').append('<div data-id ="'+arr[i][1]+'">'+arr[i][1]+'<input class="inputStr" style="margin: auto" name='+arr[i][0]+' id ="input'+inputCount+'"></input></div>');
+                $('.workspace').append('<div align="center" style="display: flex; align-items: center;j ustify-content: center;" data-id ="'+arr[i][1]+'">'+arr[i][1]+'<input class="inputStr" style="margin: auto" name='+arr[i][0]+' id ="input'+inputCount+'"></input></div>');
             }
             else{
                 inputCount++;
-                $('.workspace').append('<div><input class="inputStr" style="margin: auto" name='+arr[i][0]+' id="input'+inputCount+'"></input></div>');
+                $('.workspace').append('<div align="center" style="display: flex; align-items: center; justify-content: center;"><input class="inputStr" style="display: block" name='+arr[i][0]+' id="input'+inputCount+'"></input></div>');
             }
         }
     }

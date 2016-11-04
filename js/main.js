@@ -171,7 +171,7 @@ function paintFields(arr) {
         else{
             if (arr[i][1] !== undefined){
                 inputCount++;
-                $('.workspace').append('<div align="center" style="display: flex; align-items: center;j ustify-content: center;" data-id ="'+arr[i][1]+'">'+arr[i][1]+'<input class="inputStr" style="margin: auto" name='+arr[i][0]+' id ="input'+inputCount+'"></input></div>');
+                $('.workspace').append('<div align="center" style="display: flex; align-items: center;j ustify-content: center;" data-id ="'+arr[i][1]+'">'+arr[i][1]+'<input class="inputStr" style="margin: auto; margin-right: 129px;" name='+arr[i][0]+' id ="input'+inputCount+'"></input></div>');
             }
             else{
                 inputCount++;

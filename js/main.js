@@ -115,9 +115,9 @@ function main() {
             $('.workspace').html('');//очищаем рабочую область
             for(var i = 0;i < servise.length; i++)
             {
-                $('.workspace').append('<div>' + servise[i][0] + ':\t' + servise[i][4] + '</div>');
+                $('.workspace').append('<div align="center">' + servise[i][0] + ':\t' + servise[i][4] + '</div>');
             }
-            $('.workspace').append('<div><button class="button" id="Pay">Pay</button></div>');
+            $('.workspace').append('<div align="center"><button class="button" id="Pay">Pay</button></div>');
         }
         $('#Pay').on('click',function () {
             pay(servise, selectedServise);
@@ -150,10 +150,10 @@ function loadServises(){
 function paintMenu(arr) {
     var buttons = '';
     for (var i = 0; i < arr.length; i++) {
-        buttons = buttons + '<div class="button" id="' + arr[i][0] + '">' + arr[i][1] + '</div>';
+        buttons = buttons + '<div  class="button" id="' + arr[i][0] + '">' + arr[i][1] + '</div>';
 
     }
-    buttons = '<div style=" justify-content: center">' + buttons + '</div>';
+    buttons = '<div align="center" style=" justify-content: center">' + buttons + '</div>';
     $('.workspace').append(buttons);
 }
 /*отрисовка полей ввода*/
@@ -179,19 +179,19 @@ function paintFields(arr) {
             }
         }
     }
-    $('.workspace').append('<div><button class="btn" data-paste="1">1</button>'+
+    $('.workspace').append('<div align="center"><button class="btn" data-paste="1">1</button>'+
                     '<button class="btn" data-paste="2">2</button>'+
                     '<button class="btn" data-paste="3">3</button></div>'+
-                    '<div><button class="btn" data-paste="4">4</button>'+
+                    '<div align="center"><button class="btn" data-paste="4">4</button>'+
                     '<button class="btn" data-paste="5">5</button>'+
                     '<button class="btn" data-paste="6">6</button></div>'+
-                    '<div><button class="btn" data-paste="7">7</button>'+
+                    '<div align="center"><button class="btn" data-paste="7">7</button>'+
                     '<button class="btn" data-paste="8">8</button>'+
                     '<button class="btn" data-paste="9">9</button></div>'+
-                    '<div><button class="btn" data-paste="c">c</button>'+
+                    '<div align="center"><button class="btn" data-paste="c">c</button>'+
                     '<button class="btn" data-paste="0">0</button>'+
                     '<button class="btn" data-paste="<"><</button></div>'+
-                    '<div><button class="button" id="next">Next</button></div>'
+                    '<div align="right"><button class="button" id="next">Next</button></div>'
     );
     //$('.inputStr').on('focus', onFocus);
 }

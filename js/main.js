@@ -39,8 +39,8 @@ function main() {
         }
         else {
             paintFields(servise);
+            $('#mainMenu').show();
         }
-        $('#mainMenu').show();
         $('#mainMenu').on('click', function(){
             $('#mainMenu').off();
             main();

@@ -1,4 +1,5 @@
 function main() {
+    $('#mainMenu').hide();
     var mas = loadServises(),
     inputFocus;
     inputCount = 0;

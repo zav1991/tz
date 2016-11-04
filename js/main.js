@@ -33,10 +33,13 @@ function main() {
                 selectedServise[2] = mas[i][2];
             }
         }
-
-
-
-        paintFields(servise);
+        if (servise.length === 0)
+        {
+            alert('Сервис не задан');
+        }
+        else {
+            paintFields(servise);
+        }
         $('#mainMenu').show();
         $('#mainMenu').on('click', function(){
             $('#mainMenu').off();
